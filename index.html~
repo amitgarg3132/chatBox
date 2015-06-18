@@ -1,0 +1,10 @@
+<html>
+<head>
+  <title>Auto-complete tutorial</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="javascript"></script>
+</head>
+<body>
+  	<input type="text" value="" placeholder="Search" id="keyword"/>
+</body>
+</html>

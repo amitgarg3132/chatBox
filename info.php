@@ -1,0 +1,80 @@
+<?php
+
+$options = array
+(
+    'hostname' =>'localhost',
+    'port'     => '8983',
+    'path'     => 'solr/design_template',
+    'wt'       => 'json',
+);
+$client = new SolrClient($options);
+//$var=$client->getOptions();
+//print_r($var);
+//die;
+$query = new SolrQuery();
+$keyword = $_GET['keyword'];
+$keyword = $keyword."*";
+//print "gettype($keyword)";
+$keyword1="first_product_name:(".$keyword.")";
+$query->setQuery($keyword1);
+
+$query->setStart(0);
+
+$query->setRows(1000);
+
+$query->addField('first_product_name');
+
+$query_response = $client->query($query);
+
+$response = $query_response->getResponse();
+
+$arr = array();
+
+
+
+/*for($i =1; $i<sizeof($response["response"]["docs"]) ;$i++){
+	
+	if($response["response"]["docs"][$i]["first_product_name"]==$response["response"]["docs"][$i-1]["first_product_name"]){
+		echo "dfasdfasdf\n";
+	}
+	
+	else
+	$arr[$i]=$response["response"]["docs"][$i]["first_product_name"];
+}*/
+
+function search($arr,$string){
+	for($i =0; $i<sizeof($arr) ;$i++)
+		if($arr[$i]==$string)
+			return true;
+		return false;
+}
+
+$arr[0]=$response["response"]["docs"][0]["first_product_name"];
+$k=1;
+//echo gettype($response["response"]["docs"][0]["first_product_name"]);
+for($i =1; $i<sizeof($response["response"]["docs"]) ;$i++){
+	
+	if($response["response"]["docs"][$i]!=$response["response"]["docs"][$i-1])
+	{
+		if(!search($arr,$response["response"]["docs"][$i]["first_product_name"])){
+			
+			$arr[$k]=$response["response"]["docs"][$i]["first_product_name"];
+			$k++;
+		}
+	}
+}
+
+
+//echo sizeof($arr);
+//echo sizeof($response["response"]["docs"]);
+/*for($g=0;$g<sizeof($arr);$g++){
+	echo $arr[$g]."\n";
+}*/
+
+//echo json_encode($response["response"]["docs"]);
+echo json_encode($arr);
+
+
+?>
+
+
